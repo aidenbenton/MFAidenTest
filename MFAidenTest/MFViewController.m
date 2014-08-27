@@ -13,10 +13,10 @@
 
 @interface MFViewController () <UITextFieldDelegate>
 
-@property (nonatomic, strong) UINumberField *fieldOne;
-@property (nonatomic, strong) UINumberField *fieldTwo;
-@property (nonatomic, strong) UIMultiplyButton *buttonMultiply;
-@property (nonatomic, strong) UINumberResult *labelResult;
+@property (nonatomic, strong) UINumberField *firstField;
+@property (nonatomic, strong) UINumberField *secondField;
+@property (nonatomic, strong) UIMultiplyButton *multiplyButton;
+@property (nonatomic, strong) UINumberResult *resultLabel;
 
 @end
 
@@ -38,14 +38,11 @@
 	// Do any additional setup after loading the view, typically from a nib.
 
     [self setupUI];
-
-    // Logic
     [self setupSignals];
 }
 
 - (void) setupUI
 {
-    // UI
     self.view = [[UIView alloc] init];
 
     [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
@@ -91,40 +88,40 @@
         make.height.greaterThanOrEqualTo(@120);
     }];
 
-    // setup buttonMultiply
-    self.buttonMultiply = [[UIMultiplyButton alloc] init];
-    [inputContainer addSubview:self.buttonMultiply];
+    // setup multiplyButton
+    self.multiplyButton = [[UIMultiplyButton alloc] init];
+    [inputContainer addSubview:self.multiplyButton];
 
-    [self.buttonMultiply mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.multiplyButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(inputContainer.mas_top); //with is an optional semantic filler
         make.right.equalTo(inputContainer.mas_right);
         make.height.mas_equalTo(120);
         make.width.mas_equalTo(120);
     }];
 
-    // setup fieldOne and fieldTwo
-    self.fieldOne = [[UINumberField alloc] init];
-    [inputContainer addSubview:self.fieldOne];
+    // setup firstField and secondField
+    self.firstField = [[UINumberField alloc] init];
+    [inputContainer addSubview:self.firstField];
 
-    [self.fieldOne mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.firstField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(inputContainer);
-        make.right.equalTo(self.buttonMultiply.mas_left).with.offset(-20);
+        make.right.equalTo(self.multiplyButton.mas_left).with.offset(-20);
     }];
 
-    self.fieldTwo = [[UINumberField alloc] init];
-    [inputContainer addSubview:self.fieldTwo];
+    self.secondField = [[UINumberField alloc] init];
+    [inputContainer addSubview:self.secondField];
 
-    [self.fieldTwo mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.secondField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.bottom.equalTo(inputContainer);
-        make.right.equalTo(self.buttonMultiply.mas_left).with.offset(-20);
+        make.right.equalTo(self.multiplyButton.mas_left).with.offset(-20);
     }];
 
-    // setup labelResult
-    self.labelResult = [[UINumberResult alloc] init];
-    [self.view addSubview:self.labelResult];
-    self.labelResult.text = @"";
+    // setup resultLabel
+    self.resultLabel = [[UINumberResult alloc] init];
+    [self.view addSubview:self.resultLabel];
+    self.resultLabel.text = @"";
 
-    [self.labelResult mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.resultLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(inputContainer.mas_bottom).with.offset(padding.top * 2); //with is an optional semantic filler
         make.right.and.left.equalTo(viewContainer);
         make.height.equalTo(@50);
@@ -133,14 +130,13 @@
 
 - (void)setupSignals
 {
-    // Input Validation
-    self.buttonMultiply.enabled = NO;
+    self.multiplyButton.enabled = NO;
 
     @weakify(self);
     RACSignal *fieldValidation = [RACSignal
             combineLatest:@[
-                    self.fieldOne.rac_textSignal,
-                    self.fieldTwo.rac_textSignal,
+                    self.firstField.rac_textSignal,
+                    self.secondField.rac_textSignal,
             ]
            reduce:^(NSString *fieldOne, NSString *fieldTwo) {
                @strongify(self);
@@ -148,12 +144,12 @@
            }
     ];
 
-    RAC(self.buttonMultiply, enabled) = fieldValidation;
+    RAC(self.multiplyButton, enabled) = fieldValidation;
 
     RACSignal *valuesSignal = [[RACSignal
             combineLatest:@[
-                    self.fieldOne.rac_textSignal,
-                    self.fieldTwo.rac_textSignal,
+                    self.firstField.rac_textSignal,
+                    self.secondField.rac_textSignal,
             ]]
             reduceEach:^id(NSString *string1, NSString *string2) {
                 @strongify(self);
@@ -162,7 +158,7 @@
     ];
 
     RACSignal *resultSignal = [[[valuesSignal
-            sample:[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]]
+            sample:[self.multiplyButton rac_signalForControlEvents:UIControlEventTouchUpInside]]
             reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
                 return @([multiplicand floatValue] * [multiplier floatValue]);
             }]
@@ -173,8 +169,8 @@
     ];
 
     RACSignal *clearSignal = [RACSignal
-            merge:@[[self.fieldOne.rac_textSignal distinctUntilChanged],
-                    [self.fieldTwo.rac_textSignal distinctUntilChanged]]
+            merge:@[[self.firstField.rac_textSignal distinctUntilChanged],
+                    [self.secondField.rac_textSignal distinctUntilChanged]]
     ];
 
     resultSignal = [resultSignal
@@ -182,7 +178,7 @@
                     mapReplace:@""]
     ];
 
-    RAC(self.labelResult, text) = resultSignal;
+    RAC(self.resultLabel, text) = resultSignal;
 }
 
 - (void)didReceiveMemoryWarning
