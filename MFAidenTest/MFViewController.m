@@ -171,6 +171,12 @@
                 return RACTuplePack(@([string1 floatValue]), @([string2 floatValue]));
             }];
 
+    RACSignal *clearSignal = [RACSignal
+            merge:@[[self.fieldOne.rac_textSignal distinctUntilChanged],
+                    [self.fieldTwo.rac_textSignal distinctUntilChanged]]
+    ];
+
+    // TODO: resultSignal should return an empty string if fieldValidation returns FALSE;
     RACSignal *resultSignal = [[[valuesSignal
             sample:[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]]
             reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
@@ -179,6 +185,11 @@
             map:^id(NSNumber *result) {
                 return [result stringValue];
             }];
+
+    resultSignal = [resultSignal
+            merge:[clearSignal
+                    mapReplace:@""]
+    ];
 
     RAC(self.labelResult, text) = resultSignal;
 }
