@@ -10,10 +10,13 @@
 		5B4BC850C4C34A8F91415885 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2621ED5A507F4DA58F585147 /* libPods.a */; };
 		EB449098C2A33226FE7EEE14 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB449725D341DA9DDBB1352E /* UIKit.framework */; };
 		EB4490C3046615D92AA0FF0F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB449FD62BCEC558168D4562 /* InfoPlist.strings */; };
+		EB4491CF5B7BCFCFE03E2B29 /* UINumberField.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4498261B4A40D1DB5C5DDB /* UINumberField.m */; };
 		EB44929D608B87C053176EFE /* MFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4495D357AA0B82E60BE5BF /* MFAppDelegate.m */; };
 		EB449363516AD8922F5B08F0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB4495B8F381A1527A2D91D0 /* CoreGraphics.framework */; };
 		EB4493F4AA3C9979FBB519EB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB449725D341DA9DDBB1352E /* UIKit.framework */; };
+		EB4495458256D7A161B4A65A /* UINumberResult.m in Sources */ = {isa = PBXBuildFile; fileRef = EB44932491CBAF3A84CAE739 /* UINumberResult.m */; };
 		EB4496C11A39B7281776544E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB449E8A1F998A60BA588DC1 /* InfoPlist.strings */; };
+		EB4497759252A53960AEA1E5 /* UIMultiplyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EB44961631C9DF0BD051B719 /* UIMultiplyButton.m */; };
 		EB4497C54CFF56A319E1FCC2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB449F35448CE44FA1F540A4 /* Images.xcassets */; };
 		EB4498C2E4C5228CA63C5227 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB449E5AA25F292E56EE85E7 /* Foundation.framework */; };
 		EB4499F8EFF222D40FFCBBFF /* MFAidenTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EB44987EDACC62A7DA2D8BAD /* MFAidenTestTests.m */; };
@@ -38,13 +41,17 @@
 		04F09344182D49A7A4A34C18 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		2621ED5A507F4DA58F585147 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB44918F790E809FDB8A566E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB44932491CBAF3A84CAE739 /* UINumberResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINumberResult.m; sourceTree = "<group>"; };
 		EB44932ED194FE87D8F082D8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		EB44942BF1E5DC45BA183E19 /* MFAidenTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "MFAidenTest-Info.plist"; sourceTree = "<group>"; };
+		EB4495B57CE1E23B14F0DA74 /* UINumberResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINumberResult.h; sourceTree = "<group>"; };
 		EB4495B8F381A1527A2D91D0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EB4495D357AA0B82E60BE5BF /* MFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFAppDelegate.m; sourceTree = "<group>"; };
+		EB44961631C9DF0BD051B719 /* UIMultiplyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIMultiplyButton.m; sourceTree = "<group>"; };
 		EB4496AEB755BFEAF2E26FA5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EB449725D341DA9DDBB1352E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB4497FF85FD0C637F64581A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB4498261B4A40D1DB5C5DDB /* UINumberField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINumberField.m; sourceTree = "<group>"; };
 		EB44987EDACC62A7DA2D8BAD /* MFAidenTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFAidenTestTests.m; sourceTree = "<group>"; };
 		EB44988A479BF291EA9F4556 /* MFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFAppDelegate.h; sourceTree = "<group>"; };
 		EB4499257C7A4E79E9E8FEFF /* MFAidenTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MFAidenTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,7 +61,9 @@
 		EB449E3D1B9C85C78206FDFD /* MFAidenTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MFAidenTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB449E5AA25F292E56EE85E7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB449EAC74CE6D7755E30865 /* MFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFViewController.h; sourceTree = "<group>"; };
+		EB449EF48EF12527D67D1710 /* UIMultiplyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIMultiplyButton.h; sourceTree = "<group>"; };
 		EB449F35448CE44FA1F540A4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EB449FC9AB2525948C0CC93C /* UINumberField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINumberField.h; sourceTree = "<group>"; };
 		EB449FEB454CE01E6125C364 /* MFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +122,7 @@
 				EB449F35448CE44FA1F540A4 /* Images.xcassets */,
 				EB449FEB454CE01E6125C364 /* MFViewController.m */,
 				EB449EAC74CE6D7755E30865 /* MFViewController.h */,
+				EB449CA6F142BBA58827F369 /* UI */,
 			);
 			path = MFAidenTest;
 			sourceTree = "<group>";
@@ -144,6 +154,19 @@
 				EB449B6CCE2D522701A4808F /* MFAidenTest-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EB449CA6F142BBA58827F369 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				EB44961631C9DF0BD051B719 /* UIMultiplyButton.m */,
+				EB449EF48EF12527D67D1710 /* UIMultiplyButton.h */,
+				EB4498261B4A40D1DB5C5DDB /* UINumberField.m */,
+				EB449FC9AB2525948C0CC93C /* UINumberField.h */,
+				EB44932491CBAF3A84CAE739 /* UINumberResult.m */,
+				EB4495B57CE1E23B14F0DA74 /* UINumberResult.h */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		EB449E86EBADF93241165376 = {
@@ -288,6 +311,9 @@
 				EB449B657FD68BE1C9E2B2B6 /* main.m in Sources */,
 				EB44929D608B87C053176EFE /* MFAppDelegate.m in Sources */,
 				EB449B80DFD8C5F98E5F2D2F /* MFViewController.m in Sources */,
+				EB4497759252A53960AEA1E5 /* UIMultiplyButton.m in Sources */,
+				EB4491CF5B7BCFCFE03E2B29 /* UINumberField.m in Sources */,
+				EB4495458256D7A161B4A65A /* UINumberResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,11 +13,12 @@
 // TODO: Portrait and Landscape
 
 #import "MFViewController.h"
+#import "UINumberField.h"
 
-@interface MFViewController ()
+@interface MFViewController () <UITextFieldDelegate>
 
-@property (nonatomic, strong) UITextField *fieldOne;
-@property (nonatomic, strong) UITextField *fieldTwo;
+@property (nonatomic, strong) UINumberField *fieldOne;
+@property (nonatomic, strong) UINumberField *fieldTwo;
 @property (nonatomic, strong) UIButton *buttonMultiply;
 @property (nonatomic, strong) UILabel *labelResult;
 
@@ -40,6 +41,14 @@
     NSLog(@"loadView");
 	// Do any additional setup after loading the view, typically from a nib.
 
+    [self setupUI];
+
+    // Logic
+    [self setupSignals];
+}
+
+- (void) setupUI
+{
     // UI
     self.view = [[UIView alloc] init];
 
@@ -55,24 +64,15 @@
     UIView *fieldContainer = [[UIView alloc] init];
     [inputContainer addSubview:fieldContainer];
 
-    [viewContainer setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
+//    [viewContainer setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
     UIEdgeInsets padding = UIEdgeInsetsMake(20, 20, 20, 20);
     [viewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_top).with.offset(padding.top); //with is an optional semantic filler
-        make.left.equalTo(self.view.mas_left).with.offset(padding.left);
-        make.bottom.equalTo(self.view.mas_bottom).with.offset(-padding.bottom);
-        make.right.lessThanOrEqualTo(self.view.mas_right).with.offset(-padding.right);
 
-        // why is 350 the maximum width?
-//        make.width.equalTo(@400);
         float min_width = 800;
 
         CGRect screenRect = [[UIScreen mainScreen] bounds];
         CGFloat screenWidth = screenRect.size.width;
         CGFloat screenHeight = screenRect.size.height;
-
-        NSLog(@"%f",screenWidth);
-        NSLog(@"%f",screenHeight);
 
         if(screenWidth < screenHeight) {
             min_width = screenWidth;
@@ -80,23 +80,26 @@
             min_width = screenHeight;
         }
 
-        NSLog(@"%f",min_width);
 
-        make.width.lessThanOrEqualTo([NSNumber numberWithFloat:min_width - 40]);
+        make.top.equalTo(self.view.mas_top).with.offset(padding.top); //with is an optional semantic filler
+        make.left.equalTo(self.view.mas_left).with.offset(padding.left);
+        make.bottom.equalTo(self.view.mas_bottom).with.offset(-padding.bottom);
+
+        make.width.equalTo([NSNumber numberWithFloat:min_width - 40]);
+        make.right.lessThanOrEqualTo(self.view.mas_right).with.offset(-padding.right);
     }];
 
-    [inputContainer setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
     [inputContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(viewContainer.mas_top); //with is an optional semantic filler
         make.left.equalTo(viewContainer.mas_left);
-        make.right.equalTo(viewContainer.mas_right).priorityHigh();
+        make.right.equalTo(viewContainer.mas_right);
 
         make.height.greaterThanOrEqualTo(@120);
     }];
 
     // setup buttonMultiply
     self.buttonMultiply = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.buttonMultiply.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.7];
+    self.buttonMultiply.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     [self.buttonMultiply setTitle:@"X" forState:UIControlStateNormal];
     [inputContainer addSubview:self.buttonMultiply];
 
@@ -109,59 +112,43 @@
 
     // setup fieldOne and fieldTwo
     // would combine much of this into a function to make field styling
-    self.fieldOne = [[UITextField alloc] init];
-    [self.fieldOne setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]];
-    self.fieldOne.borderStyle = UITextBorderStyleBezel;
-    self.fieldOne.font = [UIFont systemFontOfSize:32];
-    self.fieldOne.placeholder = @"enter number";
-    self.fieldOne.keyboardType = UIKeyboardTypeNumberPad;
-    self.fieldOne.returnKeyType = UIReturnKeyNext;
-    self.fieldOne.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.fieldOne.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+    self.fieldOne = [[UINumberField alloc] init];
     self.fieldOne.delegate = self;
     [inputContainer addSubview:self.fieldOne];
 
     [self.fieldOne mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.top.equalTo(inputContainer);
-//        make.right.equalTo(self.buttonMultiply.mas_left).priorityLow();
-//        make.right.lessThanOrEqualTo(self.buttonMultiply.mas_left).with.offset(-20);
-//        make.height.mas_equalTo(50);
+        make.right.equalTo(self.buttonMultiply.mas_left).with.offset(-20);
     }];
 
-//    self.fieldTwo = [[UITextField alloc] init];
-//    [self.fieldTwo setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]];
-//    self.fieldTwo.borderStyle = UITextBorderStyleBezel;
-//    self.fieldTwo.font = [UIFont systemFontOfSize:32];
-//    self.fieldTwo.placeholder = @"enter number";
-//    self.fieldTwo.keyboardType = UIKeyboardTypeNumberPad;
-//    self.fieldTwo.returnKeyType = UIReturnKeyNext;
-//    self.fieldTwo.clearButtonMode = UITextFieldViewModeWhileEditing;
-//    self.fieldTwo.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
-//    self.fieldTwo.delegate = self;
-//    [inputContainer addSubview:self.fieldTwo];
-//
-//    [self.fieldTwo mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.equalTo(inputContainer.mas_bottom); //with is an optional semantic filler
-//        make.left.equalTo(inputContainer.mas_left);
-//        make.right.lessThanOrEqualTo(self.buttonMultiply.mas_left).with.offset(-20);
-//        make.height.equalTo(@50);
-//    }];
+    self.fieldTwo = [[UINumberField alloc] init];
+    self.fieldTwo.delegate = self;
+    [inputContainer addSubview:self.fieldTwo];
+
+    [self.fieldTwo mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.bottom.equalTo(inputContainer);
+        make.right.equalTo(self.buttonMultiply.mas_left).with.offset(-20);
+    }];
 
     // setup labelResult
-//    self.labelResult = [[UILabel alloc] init];
-//    self.labelResult.font = [UIFont systemFontOfSize:32];
-//    self.labelResult.textAlignment = NSTextAlignmentCenter;
-//    [self.view addSubview:self.labelResult];
-//
-//    self.labelResult.text = @"Result";
+    self.labelResult = [[UILabel alloc] init];
+    self.labelResult.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
+    self.labelResult.font = [UIFont systemFontOfSize:32];
+    self.labelResult.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.labelResult];
 
-//    [self.labelResult mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(inputContainer.mas_bottom).with.offset(padding.top); //with is an optional semantic filler
-//        make.right.equalTo(viewContainer.mas_right);
-//        make.height.equalTo(@50);
-//    }];
+    self.labelResult.text = @"Result";
 
-    // Logic
+    [self.labelResult mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(inputContainer.mas_bottom).with.offset(padding.top * 2); //with is an optional semantic filler
+        make.right.and.left.equalTo(viewContainer);
+        make.height.equalTo(@50);
+    }];
+}
+
+- (void)setupSignals
+{
+
 }
 
 - (void)didReceiveMemoryWarning
