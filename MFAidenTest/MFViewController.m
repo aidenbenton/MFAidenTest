@@ -142,12 +142,6 @@
     // Input Validation
     self.buttonMultiply.enabled = NO;
 
-    [[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]
-            subscribeNext:^(id sender) {
-                //...
-            }];
-
-
     @weakify(self);
     RACSignal *fieldValidation = [RACSignal
             combineLatest:@[
@@ -175,8 +169,7 @@
             merge:@[[self.fieldOne.rac_textSignal distinctUntilChanged],
                     [self.fieldTwo.rac_textSignal distinctUntilChanged]]
     ];
-
-    // TODO: resultSignal should return an empty string if fieldValidation returns FALSE;
+    
     RACSignal *resultSignal = [[[valuesSignal
             sample:[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]]
             reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
