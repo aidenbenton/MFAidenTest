@@ -142,8 +142,7 @@
     // Input Validation
     self.buttonMultiply.enabled = NO;
 
-    [[[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]
-            logAll]
+    [[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]
             subscribeNext:^(id sender) {
                 //...
             }];
@@ -160,6 +159,28 @@
            }];
 
     RAC(self.buttonMultiply, enabled) = fieldValidation; //Error is here
+
+    //mulitplication result. separated out for clarity:
+
+    RACSignal *valuesSignal = [[RACSignal
+            combineLatest:@[
+                    self.fieldOne.rac_textSignal,
+                    self.fieldTwo.rac_textSignal,
+            ]]
+            reduceEach:^id(NSString *string1, NSString *string2) {
+                return RACTuplePack(@([string1 floatValue]), @([string2 floatValue]));
+            }];
+
+    RACSignal *resultSignal = [[[valuesSignal
+            sample:[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]]
+            reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
+                return @([multiplicand floatValue] * [multiplier floatValue]);
+            }]
+            map:^id(NSNumber *result) {
+                return [result stringValue];
+            }];
+
+    RAC(self.labelResult, text) = resultSignal;
 }
 
 - (void)didReceiveMemoryWarning
