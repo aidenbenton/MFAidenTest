@@ -6,12 +6,6 @@
 //  Copyright (c) 2014 Aiden Benton. All rights reserved.
 //
 
-// TODO: Add two inputs
-// TODO: Multiplier Button
-// TODO: setup Reactive Signal to listen to button and change label
-// TODO: Try to copy structure of ui_playground or webviewcontroller
-// TODO: Portrait and Landscape
-
 #import "MFViewController.h"
 #import "UINumberField.h"
 #import "UIMultiplyButton.h"
@@ -149,12 +143,12 @@
                     self.fieldTwo.rac_textSignal,
             ]
            reduce:^(NSString *fieldOne, NSString *fieldTwo) {
+               @strongify(self);
                return @([fieldOne length] > 0 && [fieldTwo length] > 0);
-           }];
+           }
+    ];
 
-    RAC(self.buttonMultiply, enabled) = fieldValidation; //Error is here
-
-    //mulitplication result. separated out for clarity:
+    RAC(self.buttonMultiply, enabled) = fieldValidation;
 
     RACSignal *valuesSignal = [[RACSignal
             combineLatest:@[
@@ -162,22 +156,26 @@
                     self.fieldTwo.rac_textSignal,
             ]]
             reduceEach:^id(NSString *string1, NSString *string2) {
+                @strongify(self);
                 return RACTuplePack(@([string1 floatValue]), @([string2 floatValue]));
-            }];
-
-    RACSignal *clearSignal = [RACSignal
-            merge:@[[self.fieldOne.rac_textSignal distinctUntilChanged],
-                    [self.fieldTwo.rac_textSignal distinctUntilChanged]]
+            }
     ];
-    
+
     RACSignal *resultSignal = [[[valuesSignal
             sample:[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]]
             reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
                 return @([multiplicand floatValue] * [multiplier floatValue]);
             }]
             map:^id(NSNumber *result) {
+                @strongify(self);
                 return [result stringValue];
-            }];
+            }
+    ];
+
+    RACSignal *clearSignal = [RACSignal
+            merge:@[[self.fieldOne.rac_textSignal distinctUntilChanged],
+                    [self.fieldTwo.rac_textSignal distinctUntilChanged]]
+    ];
 
     resultSignal = [resultSignal
             merge:[clearSignal
