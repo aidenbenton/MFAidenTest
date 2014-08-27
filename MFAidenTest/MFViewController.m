@@ -14,13 +14,15 @@
 
 #import "MFViewController.h"
 #import "UINumberField.h"
+#import "UIMultiplyButton.h"
+#import "UINumberResult.h"
 
 @interface MFViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UINumberField *fieldOne;
 @property (nonatomic, strong) UINumberField *fieldTwo;
-@property (nonatomic, strong) UIButton *buttonMultiply;
-@property (nonatomic, strong) UILabel *labelResult;
+@property (nonatomic, strong) UIMultiplyButton *buttonMultiply;
+@property (nonatomic, strong) UINumberResult *labelResult;
 
 @end
 
@@ -64,7 +66,6 @@
     UIView *fieldContainer = [[UIView alloc] init];
     [inputContainer addSubview:fieldContainer];
 
-//    [viewContainer setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3]];
     UIEdgeInsets padding = UIEdgeInsetsMake(20, 20, 20, 20);
     [viewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
 
@@ -80,8 +81,7 @@
             min_width = screenHeight;
         }
 
-
-        make.top.equalTo(self.view.mas_top).with.offset(padding.top); //with is an optional semantic filler
+        make.top.equalTo(self.view.mas_top).with.offset(padding.top * 2); //with is an optional semantic filler
         make.left.equalTo(self.view.mas_left).with.offset(padding.left);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(-padding.bottom);
 
@@ -98,9 +98,7 @@
     }];
 
     // setup buttonMultiply
-    self.buttonMultiply = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.buttonMultiply.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
-    [self.buttonMultiply setTitle:@"X" forState:UIControlStateNormal];
+    self.buttonMultiply = [[UIMultiplyButton alloc] init];
     [inputContainer addSubview:self.buttonMultiply];
 
     [self.buttonMultiply mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -111,9 +109,7 @@
     }];
 
     // setup fieldOne and fieldTwo
-    // would combine much of this into a function to make field styling
     self.fieldOne = [[UINumberField alloc] init];
-    self.fieldOne.delegate = self;
     [inputContainer addSubview:self.fieldOne];
 
     [self.fieldOne mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -122,7 +118,6 @@
     }];
 
     self.fieldTwo = [[UINumberField alloc] init];
-    self.fieldTwo.delegate = self;
     [inputContainer addSubview:self.fieldTwo];
 
     [self.fieldTwo mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -131,13 +126,9 @@
     }];
 
     // setup labelResult
-    self.labelResult = [[UILabel alloc] init];
-    self.labelResult.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
-    self.labelResult.font = [UIFont systemFontOfSize:32];
-    self.labelResult.textAlignment = NSTextAlignmentCenter;
+    self.labelResult = [[UINumberResult alloc] init];
     [self.view addSubview:self.labelResult];
-
-    self.labelResult.text = @"Result";
+    self.labelResult.text = @"";
 
     [self.labelResult mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(inputContainer.mas_bottom).with.offset(padding.top * 2); //with is an optional semantic filler
@@ -148,7 +139,27 @@
 
 - (void)setupSignals
 {
+    // Input Validation
+    self.buttonMultiply.enabled = NO;
 
+    [[[self.buttonMultiply rac_signalForControlEvents:UIControlEventTouchUpInside]
+            logAll]
+            subscribeNext:^(id sender) {
+                //...
+            }];
+
+
+    @weakify(self);
+    RACSignal *fieldValidation = [RACSignal
+            combineLatest:@[
+                    self.fieldOne.rac_textSignal,
+                    self.fieldTwo.rac_textSignal,
+            ]
+           reduce:^(NSString *fieldOne, NSString *fieldTwo) {
+               return @([fieldOne length] > 0 && [fieldTwo length] > 0);
+           }];
+
+    RAC(self.buttonMultiply, enabled) = fieldValidation; //Error is here
 }
 
 - (void)didReceiveMemoryWarning

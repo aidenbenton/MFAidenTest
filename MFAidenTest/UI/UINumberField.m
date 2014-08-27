@@ -21,9 +21,28 @@
     self.returnKeyType = UIReturnKeyNext;
     self.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+    self.delegate = self;
 
     return self;
 
+}
+
+- (BOOL) textField: (UITextField *)theTextField shouldChangeCharactersInRange:(NSRange)range replacementString: (NSString *)string {
+//return yes or no after comparing the characters
+
+    // allow backspace
+    if (!string.length)
+    {
+        return YES;
+    }
+
+    // allow digit 0 to 9
+    if ([string intValue])
+    {
+        return YES;
+    }
+
+    return NO;
 }
 
 @end
