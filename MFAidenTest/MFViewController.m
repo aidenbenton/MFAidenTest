@@ -23,7 +23,6 @@
 @implementation MFViewController
 
 - (instancetype)init {
-
     self = [super initWithNibName:nil bundle:nil];
 
     if(self) {
@@ -35,10 +34,15 @@
 
 - (void)loadView {
     NSLog(@"loadView");
-	// Do any additional setup after loading the view, typically from a nib.
 
     [self setupUI];
     [self setupSignals];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Do any additional setup after loading the view, typically from a nib or loadView method.
 }
 
 - (void) setupUI
@@ -60,12 +64,11 @@
     UIEdgeInsets padding = UIEdgeInsetsMake(20, 20, 20, 20);
     [viewContainer mas_makeConstraints:^(MASConstraintMaker *make) {
 
-        float min_width = 800;
-
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        CGFloat screenWidth = screenRect.size.width;
-        CGFloat screenHeight = screenRect.size.height;
+        CGFloat screenWidth = CGRectGetWidth(screenRect);
+        CGFloat screenHeight = CGRectGetHeight(screenRect);
 
+        float min_width;
         if(screenWidth < screenHeight) {
             min_width = screenWidth;
         } else {
@@ -76,7 +79,7 @@
         make.left.equalTo(self.view.mas_left).with.offset(padding.left);
         make.bottom.equalTo(self.view.mas_bottom).with.offset(-padding.bottom);
 
-        make.width.equalTo([NSNumber numberWithFloat:min_width - 40]);
+        make.width.equalTo(@(min_width - 40));
         make.right.lessThanOrEqualTo(self.view.mas_right).with.offset(-padding.right);
     }];
 
@@ -119,7 +122,6 @@
     // setup resultLabel
     self.resultLabel = [[UINumberResult alloc] init];
     [self.view addSubview:self.resultLabel];
-    self.resultLabel.text = @"";
 
     [self.resultLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(inputContainer.mas_bottom).with.offset(padding.top * 2); //with is an optional semantic filler
@@ -130,40 +132,32 @@
 
 - (void)setupSignals
 {
-    self.multiplyButton.enabled = NO;
-
-    @weakify(self);
-    RACSignal *fieldValidation = [RACSignal
+    RAC(self.multiplyButton, enabled) = [RACSignal
             combineLatest:@[
                     self.firstField.rac_textSignal,
                     self.secondField.rac_textSignal,
             ]
            reduce:^(NSString *fieldOne, NSString *fieldTwo) {
-               @strongify(self);
                return @([fieldOne length] > 0 && [fieldTwo length] > 0);
            }
     ];
 
-    RAC(self.multiplyButton, enabled) = fieldValidation;
-
-    RACSignal *valuesSignal = [[RACSignal
+    RACSignal *operandsSignal = [[RACSignal
             combineLatest:@[
                     self.firstField.rac_textSignal,
                     self.secondField.rac_textSignal,
             ]]
             reduceEach:^id(NSString *string1, NSString *string2) {
-                @strongify(self);
                 return RACTuplePack(@([string1 floatValue]), @([string2 floatValue]));
             }
     ];
 
-    RACSignal *resultSignal = [[[valuesSignal
+    RACSignal *resultSignal = [[[operandsSignal
             sample:[self.multiplyButton rac_signalForControlEvents:UIControlEventTouchUpInside]]
             reduceEach:^id(NSNumber *multiplicand, NSNumber *multiplier) {
                 return @([multiplicand floatValue] * [multiplier floatValue]);
             }]
             map:^id(NSNumber *result) {
-                @strongify(self);
                 return [result stringValue];
             }
     ];
@@ -179,12 +173,6 @@
     ];
 
     RAC(self.resultLabel, text) = resultSignal;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

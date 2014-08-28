@@ -6,43 +6,36 @@
 #import "UINumberField.h"
 
 
+@interface UINumberField ()  <UITextFieldDelegate>
+@end
+
 @implementation UINumberField
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
-    if (!self) return nil;
-
-    [self setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
-    self.borderStyle = UITextBorderStyleBezel;
-    self.font = [UIFont systemFontOfSize:32];
-    self.placeholder = @"enter number";
-    self.keyboardType = UIKeyboardTypeNumberPad;
-    self.returnKeyType = UIReturnKeyNext;
-    self.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
-    self.delegate = self;
-
+    if (self) {
+        [self setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
+        self.borderStyle = UITextBorderStyleBezel;
+        self.font = [UIFont systemFontOfSize:32];
+        self.placeholder = @"enter number";
+        self.keyboardType = UIKeyboardTypeNumberPad;
+        self.returnKeyType = UIReturnKeyNext;
+        self.clearButtonMode = UITextFieldViewModeWhileEditing;
+        self.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+        self.delegate = self;
+    }
     return self;
 
 }
 
-- (BOOL) textField: (UITextField *)theTextField shouldChangeCharactersInRange:(NSRange)range replacementString: (NSString *)string {
-//return yes or no after comparing the characters
-
-    // allow backspace
-    if (!string.length)
-    {
-        return YES;
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSCharacterSet *blacklistedCharacterSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    if ([string rangeOfCharacterFromSet:blacklistedCharacterSet].location != NSNotFound) {
+        return NO;
     }
 
-    // allow digit 0 to 9
-    if ([string intValue])
-    {
-        return YES;
-    }
-
-    return NO;
+    return YES;
 }
 
 @end

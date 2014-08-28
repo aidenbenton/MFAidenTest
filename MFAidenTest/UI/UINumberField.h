@@ -6,5 +6,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UINumberField : UITextField <UITextFieldDelegate>
+@interface UINumberField : UITextField
 @end
